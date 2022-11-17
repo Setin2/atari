@@ -5,5 +5,5 @@ matplotlib==3.5.0
 numpy==1.21.6
 opencv_python==4.5.4.60
 protobuf==4.21.9
-torch==1.10.0
-torchbnn==1.2
+torch
+torchbnn
