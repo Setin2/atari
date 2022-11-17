@@ -118,7 +118,7 @@ class SARSA():
     total_reward = 0
     for step in range(self.max_steps_per_episode):
       action = self.select_action(state)
-      next_state, reward, done, _ = self.env.step(action)
+      next_state, reward, done, _, _ = self.env.step(action)
       total_reward += reward
       next_state = self.reshape_image(next_state).to(device)
       next_action = self.select_action(next_state)
@@ -134,13 +134,14 @@ class SARSA():
     return total_reward, loss
   
   def reshape_image(self, image):
+    """if len(image[0]) is 210:
+        image = image[0]"""
+    print(image)
     image_data = cv2.cvtColor(cv2.resize(image, (84, 84)), cv2.COLOR_BGR2GRAY)
     image_data[image_data > 0] = 255
     image_data = np.reshape(image_data,(1, 1, 84, 84))
     image_tensor = image_data.astype(np.float32)
     image_tensor = torch.from_numpy(image_tensor)
-    #image_tensor = image_tensor.view(image_tensor.size(0)**2, -1) # torch.Size([7056, 1])
-    #image_tensor = image_tensor.squeeze(1) # torch.Size([7056])
     return image_tensor
 
   """def reshape_image(self, image):
