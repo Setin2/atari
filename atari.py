@@ -134,7 +134,7 @@ class SARSA():
     return total_reward, loss
   
   def reshape_image(self, image):
-    if len(image[0]) == 210:
+    if len(image[0]) is 210:
         image = image[0]
     image_data = cv2.cvtColor(cv2.resize(image, (84, 84)), cv2.COLOR_BGR2GRAY)
     image_data[image_data > 0] = 255
@@ -174,7 +174,7 @@ class SARSA():
 
 EPISODES = 10
 LEARNING_RATE = 0.00025
-env = gym.make('Pong-v0')
+env = env_breakout
 print(env.action_space.n)
 agent = SARSA(env, env.action_space.n, learning_rate=LEARNING_RATE)
 rewards = []
