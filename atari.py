@@ -6,7 +6,6 @@ import torchbnn
 import matplotlib.pyplot as plt
 import numpy as np
 import cv2
-from google.colab.patches import cv2_imshow
 import torch.optim as optim
 import torch.nn as nn
 import torch.nn.functional as F
