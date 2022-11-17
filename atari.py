@@ -177,9 +177,9 @@ EPISODES = 10
 LEARNING_RATE = 0.00025
 env = gym.make('Pong-v0')
 print(env.action_space.n)
-#agent = SARSA(env, env.action_space.n, learning_rate=LEARNING_RATE)
-#rewards = []
-#losses = []
+agent = SARSA(env, env.action_space.n, learning_rate=LEARNING_RATE)
+rewards = []
+losses = []
 ln = list(range(0, EPISODES))
 for e in range(EPISODES):
   print("episode:", e)
