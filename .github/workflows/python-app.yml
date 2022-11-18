@@ -47,7 +47,6 @@ jobs:
       run: |
         python atari.py
 
-    - uses: actions/checkout@v3
     - name: Update file
       run: |
         git config --global user.name 'github-actions[bot]'
