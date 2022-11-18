@@ -49,6 +49,7 @@ jobs:
   
     - uses: devops-infra/action-commit-push@master
     - name: Commit and push changes
+      uses: devops-infra/action-commit-push@master
       with:
         github_token: ${{ secrets.UPDATE_GRAPHS }}
         commit_message: Update Graphs
