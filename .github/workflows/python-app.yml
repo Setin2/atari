@@ -42,7 +42,7 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-    - name: Run atari.py
+    - name: Train agent
       run: |
         python atari.py
 
@@ -50,5 +50,6 @@ jobs:
       run: |
         git config --global user.name 'Setin2'
         git config --global user.email 'stefancernat88@yahoo.com'
-        git commit -am "Update graphs"
+        git add .
+        git commit -m "Update graphs"
         git push
