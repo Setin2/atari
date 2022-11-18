@@ -46,10 +46,15 @@ jobs:
     - name: Train agent
       run: |
         python atari.py
-  
+
     - uses: actions/checkout@v3
-    - name: Commit and push changes
-      uses: devops-infra/action-commit-push@master
-      with:
-        github_token: ${{ secrets.UPDATE_GRAPHS }}
-        commit_message: Update Graphs
+    - name: Update file
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add .
+        git commit -m "Update graphs"
+        git push
+      env:
+        REPO_KEY: ${{secrets.UPDATE_GRAPHS}}
+        USERNAME: github-actions[bot]
