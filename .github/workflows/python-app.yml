@@ -45,3 +45,10 @@ jobs:
     - name: Run atari.py
       run: |
         python atari.py
+
+    - name: Update graphs
+      run: |
+        git config --global user.name 'Setin2'
+        git config --global user.email 'stefancernat88@yahoo.com'
+        git commit -am "Update graphs"
+        git push
