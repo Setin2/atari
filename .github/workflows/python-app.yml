@@ -25,6 +25,7 @@ jobs:
         python-version: "3.10"
 
     - uses: actions/cache@v2
+    - name: Cache dependencies
       with:
         path: ~/.cache/pip
         key: ${{ hashFiles('setup.py') }}-${{ hashFiles('dev-requirements.txt') }}
@@ -46,10 +47,8 @@ jobs:
       run: |
         python atari.py
 
-    - name: Update graphs
-      run: |
-        git config --global user.name 'Setin2'
-        git config --global user.email 'stefancernat88@yahoo.com'
-        git add .
-        git commit -m "Update graphs"
-        git push
+    - name: Commit and push changes
+      uses: devops-infra/action-commit-push@master
+      with:
+        github_token: ${{ secrets.UPDATE_GRAPHS }}
+        commit_message: Update Graphs
