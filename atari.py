@@ -189,5 +189,7 @@ for e in range(EPISODES):
 
 import matplotlib.pyplot as plt
 plt.plot(np.convolve(rewards, np.ones(20) / 20, mode="valid"))
+plt.savefig('rewards.png')
 
 plt.plot(np.convolve(losses, np.ones(5) / 5, mode="valid"))
+plt.savefig('losses.png')
