@@ -47,7 +47,7 @@ jobs:
       run: |
         python atari.py
   
-    - uses: devops-infra/action-commit-push@master
+    - uses: actions/checkout@v3
     - name: Commit and push changes
       uses: devops-infra/action-commit-push@master
       with:
