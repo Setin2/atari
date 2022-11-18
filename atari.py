@@ -172,7 +172,7 @@ class SARSA():
       return loss.cpu().detach().numpy()
     return 0
 
-EPISODES = 10
+EPISODES = 5
 LEARNING_RATE = 0.00025
 env = env_breakout
 print(env.action_space.n)
