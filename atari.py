@@ -1,13 +1,14 @@
 import gym
-import random
+import cv2
 import math
 import torch
+import random
 import torchbnn
-import matplotlib.pyplot as plt
 import numpy as np
-import cv2
-import torch.optim as optim
 import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
 """
@@ -16,25 +17,17 @@ all observation spaces have shape: Box(0, 255, (210, 160, 3), uint8)
 state[0] is a list of length 210
 state[0][0] is a list of length 160
 state[0][0][0] is a list of length 3
-
-so basically state[0] is the actual state we need to pass to the neural net
-
-and state[1] will return something like {'lives': 5, 'episode_frame_number': 0, 'frame_number': 0}
 """
 
-# project description says to use v0
-# doing so gives an out of date warning so we might have to ask
-
-# all action spaces are discrete
-# action_space = 4
+# the action_spaces are: 4, 6, 18
 env_breakout = gym.make('Breakout-v0')
-# action_space = 6
-env_space_invaders = gym.make('SpaceInvaders-v4')
-# action_space = 18
-env_tennis = gym.make('Tennis-v4')
+#env_space_invaders = gym.make('SpaceInvaders-v0')
+#env_tennis = gym.make('Tennis-v0')
 
 EPS_DECAY = 0.99  # e-greedy threshold decay
 BATCH_SIZE = 256  # Q-learning batch size
+EPISODES = 4
+LEARNING_RATE = 0.00025
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(device)
@@ -99,7 +92,7 @@ class SARSA():
     self.num_actions = num_actions
     self.discount_factor = discount_factor
     self.steps_done = 0
-    self.eps_threshold = 1
+    self.eps_threshold = 0.9
     self.max_steps_per_episode = 10000
     super().__init__()
   
@@ -143,11 +136,6 @@ class SARSA():
     image_tensor = torch.from_numpy(image_tensor)
     return image_tensor
 
-  """def reshape_image(self, image):
-    image = cv2.resize(image, dsize=(84, 84), interpolation=cv2.INTER_CUBIC) # change resoluation to 84x84
-    image = image[:, :, :1] # keep only on image channel
-    return image"""
-
   def learn_SARSA(self):
     if len(self.memory) > BATCH_SIZE:
       transitions = self.memory.sample(BATCH_SIZE)
@@ -161,8 +149,8 @@ class SARSA():
       batch_done = torch.tensor(batch_done).to(device)
 
       current_q_values = self.policy(batch_state).gather(1, batch_action.unsqueeze(1)) # Q(St, At)
-      next_q_values = self.policy(batch_next_state).gather(1, torch.tensor(batch_next_action).unsqueeze(1)) # Q(St+1, At+1)
-      expected_q_values = torch.tensor(batch_reward).unsqueeze(1) + (self.discount_factor * next_q_values)
+      next_q_values = self.policy(batch_next_state).gather(1, batch_next_action.unsqueeze(1)) # Q(St+1, At+1)
+      expected_q_values = batch_reward.unsqueeze(1) + (self.discount_factor * next_q_values)
 
       loss = F.mse_loss(current_q_values, expected_q_values.view(-1, 1))
       self.optimizer.zero_grad()
@@ -172,24 +160,29 @@ class SARSA():
       return loss.cpu().detach().numpy()
     return 0
 
-EPISODES = 5
-LEARNING_RATE = 0.00025
-env = env_breakout
-print(env.action_space.n)
-agent = SARSA(env, env.action_space.n, learning_rate=LEARNING_RATE)
-rewards = []
-losses = []
-ln = list(range(0, EPISODES))
-for e in range(EPISODES):
-  print("episode:", e)
-  state = env.reset()
-  reward, loss = agent.train(state)
-  rewards.append(reward)
-  losses.append(loss)
+def train(savefig=True):
+  env = env_breakout
+  agent = SARSA(env, env.action_space.n, learning_rate=LEARNING_RATE)
+  rewards = []
+  losses = []
+  for e in range(EPISODES):
+    print("episode:", e)
+    state = env.reset()
+    reward, loss = agent.train(state)
+    rewards.append(reward)
+    losses.append(loss)
 
-import matplotlib.pyplot as plt
-plt.plot(np.convolve(rewards, np.ones(20) / 20, mode="valid"))
-plt.savefig('rewards.png')
+  if savefig:
+    plt.plot(rewards)
+    plt.ylabel('reward')
+    plt.xlabel('episode')
+    plt.savefig('rewards.png')
+    plt.clf()
 
-plt.plot(np.convolve(losses, np.ones(5) / 5, mode="valid"))
-plt.savefig('losses.png')
+    plt.plot(losses)
+    plt.ylabel('loss')
+    plt.xlabel('episode')
+    plt.savefig('losses.png')
+
+if __name__ == "__main__":
+  train(savefig=True)
