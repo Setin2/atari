@@ -26,7 +26,7 @@ env_breakout = gym.make('Breakout-v0')
 
 EPS_DECAY = 0.99  # e-greedy threshold decay
 BATCH_SIZE = 256  # Q-learning batch size
-EPISODES = 4
+EPISODES = 200
 LEARNING_RATE = 0.00025
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
