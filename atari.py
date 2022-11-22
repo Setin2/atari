@@ -1,13 +1,11 @@
 import gym
 import cv2
-import math
 import torch
 import random
 import torchbnn
 import numpy as np
 import torch.nn as nn
 import torch.optim as optim
-import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import torch.nn.functional as F
 
@@ -26,7 +24,7 @@ env_breakout = gym.make('Breakout-v0')
 
 EPS_DECAY = 0.99  # e-greedy threshold decay
 BATCH_SIZE = 256  # Q-learning batch size
-EPISODES = 200
+EPISODES = 400
 LEARNING_RATE = 0.00025
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -92,10 +90,10 @@ class SARSA():
     self.num_actions = num_actions
     self.discount_factor = discount_factor
     self.steps_done = 0
-    self.eps_threshold = 0.9
+    self.eps_threshold = 1
     self.max_steps_per_episode = 10000
     super().__init__()
-  
+
   def select_action(self, state):
     sample = random.random()
     self.steps_done += 1
@@ -122,10 +120,10 @@ class SARSA():
       state = next_state
 
     self.eps_threshold *= EPS_DECAY
-    print("epsilon:", np.round(self.eps_threshold,3), ", reward:", np.round(total_reward,3), ", steps:", step, "loss:", np.round(loss,8))
+    print("epsilon:", np.round(self.eps_threshold, 3), ", reward:", np.round(total_reward, 3), ", steps:", step, "loss:", np.round(loss, 8))
 
     return total_reward, loss
-  
+
   def reshape_image(self, image):
     if len(image[0]) == 210:
         image = image[0]
