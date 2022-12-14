@@ -1,1 +1,2 @@
-# atari
+# Deep RL: Atari
+
